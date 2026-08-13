@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class RecipeRestController {
 	private final RecipeService rService;
 	
-	@GetMapping("/recipe/list")
+	@GetMapping("/recipe/list_vue")
 	public ResponseEntity<Map> recipe_list(@RequestParam(value="page", required = false) String page)
 	{
 		Map map = new HashMap();
@@ -35,8 +35,40 @@ public class RecipeRestController {
 			
 		} catch (Exception ex) {
 			// TODO: handle exception
+			ex.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			// 500에러
+		}
+		
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping("/recipe/detail_vue")
+	public ResponseEntity<Map> recipe_detail(@RequestParam("no") int no)
+	{
+		Map map = new HashMap();
+		
+		try 
+		{
+			RecipeDetailVO vo = rService.recipeDetailData(no);
+			List<String> mList = new ArrayList<String>();
+			List<String> iList = new ArrayList<String>();
+			String[] datas = vo.getFoodmake().split("\n");
+			for(String s:datas)
+			{
+				StringTokenizer st = new StringTokenizer(s,"^");
+				mList.add(st.nextToken());
+				iList.add(st.nextToken());
+			}
+			
+			map.put("vo", vo);
+			map.put("mList", mList);
+			map.put("iList", iList);
+			
+		} catch (Exception ex) {
+			// TODO: handle exception
+			ex.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		
 		return ResponseEntity.ok(map);

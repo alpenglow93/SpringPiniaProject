@@ -18,8 +18,8 @@
 		SELECT no,poster,title,chef
 		FROM recipe
 		<include refid="where-no"/>
-		ORDER BY no ASC
-		OFFET #{start} ROWS FETCH NEXT 12 ROWS ONLY
+		ORDER BY no DESC
+		OFFSET #{start} ROWS FETCH NEXT 12 ROWS ONLY
 	</select>
 	<!-- COUNT -->
 	<select id="recipeCount" resultType="int">
